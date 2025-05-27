@@ -14,7 +14,7 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/register", response_model=schemas.UserResponse)
+@app.post("/api/register", response_model=schemas.UserResponse)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
@@ -30,7 +30,7 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-@app.post("/login")
+@app.post("/api/login")
 def login(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user or not auth.verify_password(user.password, db_user.hashed_password):
