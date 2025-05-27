@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -11,20 +12,12 @@ function LoginPage() {
     setError('');
     setSuccess('');
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || 'Login failed');
-      }
+      const res = await axios.post('/api/login', { email, password });
       setSuccess('Login successful!');
-      setUsername(''); setPassword('');
+      setEmail(''); setPassword('');
       // Optionally, redirect or store token here
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.detail || err.message || 'Login failed');
     }
   };
 
@@ -33,7 +26,7 @@ function LoginPage() {
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <input className="w-full px-3 py-2 border rounded" type="text" placeholder="Username or Email" value={username} onChange={e => setUsername(e.target.value)} required />
+          <input className="w-full px-3 py-2 border rounded" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
           <input className="w-full px-3 py-2 border rounded" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
           <button className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" type="submit">Login</button>
         </form>
