@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +17,8 @@ function LoginPage() {
       const res = await axios.post('/api/login', { email, password });
       setSuccess('Login successful!');
       setEmail(''); setPassword('');
-      // Optionally, redirect or store token here
+      localStorage.setItem('access_token', res.data.access_token);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Login failed');
     }

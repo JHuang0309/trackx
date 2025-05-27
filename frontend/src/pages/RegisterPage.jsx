@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
   const [name, setname] = useState('');
@@ -7,6 +8,7 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +18,11 @@ function RegisterPage() {
       const res = await axios.post('/api/register', { name, email, password });
       setSuccess('Registration successful! You can now log in.');
       setname(''); setEmail(''); setPassword('');
+
+      // Automatically log in after successful registration
+      const loginRes = await axios.post('/api/login', { email, password });
+      localStorage.setItem('access_token', loginRes.data.access_token);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Registration failed');
     }
