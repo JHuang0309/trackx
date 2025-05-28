@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
+  const api = import.meta.env.VITE_API_URL;
+
   const [name, setname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,12 +17,12 @@ function RegisterPage() {
     setError('');
     setSuccess('');
     try {
-      const res = await axios.post('/api/register', { name, email, password });
+      const res = await axios.post(`${api}/register`, { name, email, password });
       setSuccess('Registration successful! You can now log in.');
       setname(''); setEmail(''); setPassword('');
 
       // Automatically log in after successful registration
-      const loginRes = await axios.post('/api/login', { email, password });
+      const loginRes = await axios.post(`${api}/login`, { email, password });
       localStorage.setItem('access_token', loginRes.data.access_token);
       navigate('/dashboard');
     } catch (err) {

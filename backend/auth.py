@@ -1,9 +1,11 @@
 # Authentication logic
+import os
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 
-SECRET_KEY = "trackx-2025-v1.0.0"  # Replace with a secure key!
+# SECRET_KEY = "trackx-2025-v1.0.0"  # Replace with a secure key!
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
